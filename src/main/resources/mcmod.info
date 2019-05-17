@@ -1,0 +1,16 @@
+[
+{
+  "modid": "dontevenaxe",
+  "name": "Don't Even Axe",
+  "description": "Halves the damage of axes",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Laike_Endaril"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
