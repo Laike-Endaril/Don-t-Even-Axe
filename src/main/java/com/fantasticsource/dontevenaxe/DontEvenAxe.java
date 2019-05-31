@@ -1,15 +1,10 @@
 package com.fantasticsource.dontevenaxe;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.config.Config;
-import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -35,10 +30,7 @@ public class DontEvenAxe
         if (attacker instanceof EntityLivingBase)
         {
             ItemStack itemStack = ((EntityLivingBase) attacker).getHeldItemMainhand();
-            for (String s : itemStack.getItem().getToolClasses(itemStack))
-            {
-                if (s.equals("axe")) event.setAmount(event.getAmount() * 0.5f);
-            }
+            if (itemStack.getItem().getHarvestLevel(itemStack, "axe", null, null) >= 0) event.setAmount(event.getAmount() * 0.5f);
         }
     }
 }
