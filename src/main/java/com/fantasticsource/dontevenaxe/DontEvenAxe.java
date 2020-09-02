@@ -3,6 +3,7 @@ package com.fantasticsource.dontevenaxe;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -33,6 +34,13 @@ public class DontEvenAxe
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onAttack(LivingHurtEvent event)
     {
+        DamageSource dmgSource = event.getSource();
+        Entity source = dmgSource.getTrueSource();
+        Entity immediate = dmgSource.getImmediateSource();
+
+        boolean isMelee = source != null && source == immediate;
+        if (!isMelee) return;
+
         Entity attacker = event.getSource().getImmediateSource();
         if (!(attacker instanceof EntityLivingBase)) attacker = event.getSource().getTrueSource();
         if (attacker instanceof EntityLivingBase)
