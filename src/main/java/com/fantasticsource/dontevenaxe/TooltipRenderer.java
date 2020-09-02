@@ -17,7 +17,7 @@ public class TooltipRenderer
         EntityPlayer player = event.getEntityPlayer();
         if (player == null) return;
 
-        String attackDamageString = " " + I18n.translateToLocalFormatted("attribute.name.generic.attackDamage");
+        String attackDamageString = I18n.translateToLocalFormatted("attribute.name.generic.attackDamage");
 
         ItemStack stack = event.getItemStack();
         if (stack.getItem().getHarvestLevel(stack, "axe", null, null) >= 0)
@@ -30,8 +30,8 @@ public class TooltipRenderer
                 {
                     try
                     {
-                        double damage = Double.parseDouble(line.replace(attackDamageString, "")) * DontEvenAxe.getMultiplier(stack);
-                        tooltip.set(i, damage + attackDamageString);
+                        double damage = Double.parseDouble(line.replace(attackDamageString, "").trim()) * DontEvenAxe.getMultiplier(stack);
+                        tooltip.set(i, line.replaceFirst("[0-9.]+", "" + damage));
                     }
                     catch (NumberFormatException e)
                     {
