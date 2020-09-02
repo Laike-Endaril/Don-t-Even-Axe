@@ -5,9 +5,12 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
 
 @Mod(modid = DontEvenAxe.MODID, name = DontEvenAxe.NAME, version = DontEvenAxe.VERSION)
 public class DontEvenAxe
@@ -20,17 +23,27 @@ public class DontEvenAxe
     public static void preInit(FMLPreInitializationEvent event)
     {
         MinecraftForge.EVENT_BUS.register(DontEvenAxe.class);
+
+        if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
+        {
+            MinecraftForge.EVENT_BUS.register(TooltipRenderer.class);
+        }
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onAttack(LivingHurtEvent event)
     {
         Entity attacker = event.getSource().getImmediateSource();
         if (!(attacker instanceof EntityLivingBase)) attacker = event.getSource().getTrueSource();
         if (attacker instanceof EntityLivingBase)
         {
-            ItemStack itemStack = ((EntityLivingBase) attacker).getHeldItemMainhand();
-            if (itemStack.getItem().getHarvestLevel(itemStack, "axe", null, null) >= 0) event.setAmount(event.getAmount() * 0.5f);
+            event.setAmount((float) (event.getAmount() * getMultiplier(((EntityLivingBase) attacker).getHeldItemMainhand())));
         }
+    }
+
+    public static double getMultiplier(ItemStack stack)
+    {
+        if (stack.getItem().getHarvestLevel(stack, "axe", null, null) >= 0) return 0.5;
+        return 1;
     }
 }
